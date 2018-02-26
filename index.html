@@ -27,6 +27,25 @@
 				<section>
 					<h2>{latte}</h2>
 					<p>what it is and how do we use it</p>
+					<aside class="notes">
+						Why?
+						<br>
+						HTML using php variables
+						<br>
+						Php was originally built to be templating language
+						<br>
+						You dont need them, but theirs features makes your page more dynamic
+						<br>
+						You can send data to template
+						<br>
+						Html populates the data from template
+						<br>
+						No need of using complex ajax requests
+						<br>
+						Unexperinced devs make lots of mistakes
+						<br>
+						similar to twig
+					</aside>
 				</section>
 				<section>
 					<h3>fast & secure</h3>
@@ -38,6 +57,9 @@
 
 				<section>
 					<img src="./img/without_nette.png" alt="">
+					<aside class="notes">
+						NOTE the html specialchars
+					</aside>
 				</section>
 
 				<section>
@@ -49,6 +71,7 @@
 					<ul>
 						<li>macro in braces, for example {foreach …}</li>
 						<li>n:macro, for example n:if="…"</li>
+						<li>example: {* commenting macro *} </li>
 						<li><a href="https://latte.nette.org/en/macros">https://latte.nette.org/en/macros</a></li>
 					</ul>
 				</section>
@@ -88,6 +111,18 @@
 					</code></pre>
 					<p>Crops the text on lenght of 10</p>
 					<pre><code><p>{$text|shortify}</p></code></pre>
+				</section>
+				
+				<section>
+					<h3>composer require latte/latte</h3>
+				</section>
+				
+				<section>
+					<h3>Performance</h3>
+					<aside class="notes">
+							The speed of latte comes from the fact that templates are compiled to their native PHP counterparts and are stored/cached on the disk. So the speed of templates nearly equals pure PHP.
+							Auto-recompilation of templates is done when the source file is updated. During development you will just need to update the template and it should reflect the changes.
+					</aside>
 				</section>
 
 				<section>
