@@ -79,11 +79,27 @@
 				<section>
 					<h3>Context-Aware Escaping</h3>
 					<aside class="notes">
-						Byť je Cross Site Scripting (XSS) jedním z nejtriviálnějších způsobů narušení webových stránek, jde o zranitelnost nejčastější. Přitom velmi závažnou, protože může vést k zcizení identity a podobně. 
+						Latte esacpes for you
 						<br>
-						Jedním z bonusů latte je že za vás escapuje, takže se nestane to, že by jste zapomněli něco vyescapovat.
-						<br>
-						Problém je ale v tom, že na webové stránce existují různé kontexty a v každém je potřeba ošetřit vypisované proměnné trošku jinak. Může tak vzniknou bezpečnostní díra i kvůli špatně zvolené escapovací funkci.
+						Because there are different types of escaping
+						latte automaticaly recogniezes where and how to escape
+						Thus making your project secure
+					</aside>
+				</section>
+				
+				<section>
+					<h3>Link checking</h3>
+					<pre><code data-trim>
+							{var $link = 'javascript:attack()'}
+
+							<a href="{$link}">click here</a>
+					</code></pre>
+					<p>renders</p>
+					<pre><code data-trim> 
+							<a href="">click here</a>
+					</code></pre>
+					<aside class="notes">
+						Latte automatically checks whether the variable used in the src or href attributes contains a web URL (ie protocol HTTP) and prevents the writing of links that may pose a security risk.
 					</aside>
 				</section>
 
@@ -112,17 +128,17 @@
 					<p>Crops the text on lenght of 10</p>
 					<pre><code><p>{$text|shortify}</p></code></pre>
 				</section>
-				
-				<section>
-					<h3>composer require latte/latte</h3>
-				</section>
-				
+
 				<section>
 					<h3>Performance</h3>
 					<aside class="notes">
 							The speed of latte comes from the fact that templates are compiled to their native PHP counterparts and are stored/cached on the disk. So the speed of templates nearly equals pure PHP.
 							Auto-recompilation of templates is done when the source file is updated. During development you will just need to update the template and it should reflect the changes.
 					</aside>
+				</section>
+								
+				<section>
+					<h3>composer require latte/latte</h3>
 				</section>
 
 				<section>
