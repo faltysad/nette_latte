@@ -24,8 +24,8 @@
 	<body>
 		<div class="reveal">
 			<div class="slides">
-				<section>
-					<h2>{latte}</h2>
+				<section data-background-color="#ed3d11">
+					<h1>{latte}</h1>
 					<p>what it is and how do we use it</p>
 					<aside class="notes">
 						Why?
@@ -54,7 +54,7 @@
 						<li>it is the first PHP engine introducing context-aware escaping and link checking</li>
 					</ul>
 				</section>
-
+				
 				<section>
 					<img src="./img/without_nette.png" alt="">
 					<aside class="notes">
@@ -71,9 +71,12 @@
 					<ul>
 						<li>macro in braces, for example {foreach …}</li>
 						<li>n:macro, for example n:if="…"</li>
-						<li>example: {* commenting macro *} </li>
 						<li><a href="https://latte.nette.org/en/macros">https://latte.nette.org/en/macros</a></li>
 					</ul>
+				</section>
+
+				<section>
+					<h3>{* commenting macro *}</h3>
 				</section>
 
 				<section>
@@ -106,15 +109,16 @@
 				<section>
 					<h3>Filters</h3>
 					<ul>
-						<li>Latte allows calling filters by using the pipe sign notation called modifier</li>
-						<pre><code><h1>{$heading|upper}</h1></code></pre>
-						<li>Filters can be chained, in that case they apply in order from left to right</li>
-						<pre><code><h1>{$heading|lower|capitalize}</h1></code></pre>
-						<li>Parameters are put after the filter name separated by colon or comma</li>
-						<pre><code><h1>{$heading|truncate:20,''}</h1></code></pre>
-						<li>Filters can be applied on expression</li>
-						<pre><code><h1>{var $name = ($title|upper) . ($subtitle|lower)}</h1></code></pre>
+						<li class="smaller">Latte allows calling filters by using the pipe sign notation called modifier</li>
+						<li><pre><code><h1>{$heading|upper}</h1></code></pre></li>
 					</ul>
+				</section>
+
+				<section>
+						<h3>More filters</h3>
+						<pre><code><h1>{$heading|lower|capitalize}</h1></code></pre>
+						<pre><code><h1>{$heading|truncate:20,''}</h1></code></pre>
+						<pre><code><h1>{var $name = ($title|upper) . ($subtitle|lower)}</h1></code></pre>
 				</section>
 
 				<section>
@@ -145,6 +149,325 @@
 					<h3>Demo</h3>
 					<p>http://bit.ly/nette_latte</p>
 				</section>
+
+				<section data-background-color="#3f3f3f">
+					<pre>
+						<code data-trim contenteditable="">
+class HomepagePresenter extends Nette\Application\UI\Presenter
+{
+    /** @var Nette\Database\Context */
+    private $database;
+
+    public function renderDefault()
+    {
+        $this->template->values = ["Test", "XXX", "dasdasda"];
+        $this->template->surname = "Faltejsek";
+    }
+}
+					</code>
+				</pre>
+				</section>
+
+				<section data-background-color="#3f3f3f">
+					<pre>
+						<code data-trim contenteditable="">
+{block content}
+	<h1>{$surname}</h1>
+{/block}
+
+{block values}
+    <h1 n:block="title">My values</h1>
+
+    <div n:foreach="$values as $value" class="post">
+    	{$value|upper}
+	</div>
+{/block}
+				</code>
+				</pre>
+				</section>
+
+				<section data-background-color="#3b6ec6">
+					<h1>{forms}</h1>
+					<p>What it can really do?</p>
+				</section>
+
+				<section data-background-color="#3b6ec6">
+					<h3>Why</h3>
+					<aside class="notes">
+							validate sent data both client-side (JavaScript) and server-side
+							<br>
+							provide high level of security
+							<br>
+							multiple render modes
+							<br>
+							translations, i18n
+					</aside>
+				</section>
+
+				<section>
+					<img src="./img/meme.jpg" alt="">
+				</section>
+
+				<section data-background-color="#3b6ec6">
+						<h3>Safety</h3>
+						<p class="smaller">Nette Framework puts a great effort to be safe</p>
+	
+						<aside class="notes">
+								since forms are the most common user input
+								<br>
+								tvrdí že jsou dokonce impenetrable
+								<br>
+								dynamically and transparently mantained - nic nemusíme dělat manualne
+								<br>
+								Cross Site Scripting (XSS) 
+								Cross-Site Request Forgery (CSRF) 
+								special control characters
+								are filtered
+								<br>
+								All inputs are checked for UTF-8 validity. 
+								<br>
+								S nette si ustertrite doublechecking hodnot na klientu/serveru a vyhnete se dělani chyb
+						</aside>
+				</section>
+
+				<section data-background-color="#3b6ec6">
+					<h3>XSS example</h3>
+					<pre><code><!--<script>alert(document.cookie);</script>--></code></pre>
+					<aside class="notes">
+							XSS
+							<br>
+							roughly 84% všech security chyb na webech
+							<br>
+							umožňuje útočníkovy injectnout client side script
+							<br>
+							browswer nemá jak zvalidovat totožnost těchto scriptů, a tak si myslí že jde o trusted ones.
+							<br>
+							můžeme skrze ně ukrást cookies, session tokeny activated
+							<br>
+							můžeme přepsat obsah html stránky
+					</aside>
+				</section>
+				<section data-background-color="#3b6ec6">
+					<h3>CSRF example</h3>
+					<pre><code><img src="http://mysite.com/vote/30" /></code></pre>
+					<aside class="notes">
+							CSRF
+							<br>
+							Vynucení state-changing requestů od authentikovaných uživatelů
+							<br>
+							nikoliv krádež dat, útočník nemá způsob jak vidět respnonse forgnutých requestů
+							<br>
+							útočník může uživatele zmást nejčastěji k převodu fundů na jeho účet, změnu email adresy atd.
+							<br>
+							pokud se jedná o admin účet, jsme schopni poškodit celou aplikaci
+					</aside>
+				</section>
+
+				<section data-background-color="#3b6ec6">
+					<h3>Our first form</h3>
+					<p>Forms are added into presenters using component factories</p>
+				</section>
+
+				<section data-background-color="#3f3f3f">
+					<pre><code contenteditable>
+namespace App\Presenters;
+
+use Nette;
+
+
+class FormPresenter extends Nette\Application\UI\Presenter
+{
+	protected function createComponentRegistrationForm()
+	{
+		$form = new Nette\Application\UI\Form;
+		$form->addText('name', 'Name:');
+		$form->addPassword('password', 'Password:');
+		$form->addSubmit('login', 'Sign up');
+		$form->onSuccess[] = [$this, 'registrationFormSucceeded'];
+		return $form;
+	}
+}
+					</code></pre>
+					<aside class="notes">
+						important!: jmeno funkce = jmeno komponentu
+						<br>
+						taham to z predpripravene slozky UI komponent
+						<br>
+						onSucces volam metodu kterou si jeste pripravime a vracim form
+						<br>
+						ZATIM NEBUDE FUNGOVAT!
+						<br>
+						The form itself is passed as the first parameter. 
+						<br>
+						The submitted values are passed as the second parameter contained in a ArrayHash object.
+						<br>
+						If you prefer a simple array, you can typehint the second parameter array $values
+						<br>
+						You can also use $values = $form->getValues() to retrieve the submitted values.
+					</aside>
+				</section>
+
+
+				<section data-background-color="#3f3f3f">
+					<h3>What we did?</h3>
+				</section>
+
+
+
+				<section data-background-color="#3f3f3f">
+				<p>Create presenter</p>
+					<pre><code data-trim>
+						class FormPresenter extends Nette\Application\UI\Presenter
+					</code></pre>
+				</section>
+
+
+				<section data-background-color="#3f3f3f">
+					<p>new form component</p>
+					<pre>
+						<code  data-trim contenteditable="">
+								$form = new Nette\Application\UI\Form;
+						</code>
+					</pre>
+				</section>
+
+				<section data-background-color="#3f3f3f">
+					<p>add fields</p>
+					<pre>
+						<code  data-trim contenteditable="">
+								$form->addText('name', 'Name:');
+								$form->addPassword('password', 'Password:');
+								$form->addSubmit('login', 'Sign up');
+						</code>
+					</pre>
+				</section>
+
+				<section data-background-color="#3f3f3f">
+					<pre><code>
+...
+// called after form is successfully submitted
+public function registrationFormSucceeded(Nette\Application\UI\Form $form, $values)
+{
+	// ...
+	//$values = $form->getValues();
+	$this->flashMessage('You have successfully signed up.');
+	$this->redirect('Homepage:');
+}
+					</code></pre>
+					<aside class="notes">
+						voláme registrationFormSucceeded() po submitnutí formu
+						<br>
+						
+					</aside>
+				</section>
+
+				<section data-background-color="#3b6ec6">
+					<h3>How do we render it?</h3>
+					<p class="smaller">using macros</p>
+				</section>
+
+				<section data-background-color="#3b6ec6">
+					<h3>{control registrationForm}</h3>
+					<aside class="notes">
+							The rendered form follows basic web accessibility guidelines. All labels are generated as <label> 
+								<br>
+								elements and are associated with their inputs, 
+								<br>
+								clicking on the label moves cursor on the input.
+					</aside>
+				</section>
+
+				<section data-background-color="#3b6ec6">
+					<h3>Authentication</h3>
+					<aside class="notes">
+						Mluvím tu celou dobu o authentikaci, ale zatím jsme žádnou nepřidali.
+						Pojďme ji tedy implementovat
+					</aside>
+				</section>
+
+				<section data-background-color="#3f3f3f">
+						<pre>
+							<code  data-trim contenteditable="">
+$form->addText('name', 'Name:')
+	->setRequired('Please fill your name.');
+							</code>
+						</pre>
+						<aside class="notes">
+								In order to require user's name, call setRequired() method on the form item. You can pass an error message as optional argument and it will be displayed if user does not fill his name in:
+								<br>
+								Try submitting a form without the name – the message is displayed unless you meet the validation rules. The form is validated on both the client and server side.
+						</aside>
+				</section>
+
+
+				<section data-background-color="#3f3f3f">
+						<pre>
+							<code  data-trim contenteditable="">
+									<style>
+									.required label { color: maroon }
+									</style>
+							</code>
+						</pre>
+						<aside class="notes">
+								Nette Framework adds required class to all mandatory elements. Adding the following style will turn label of name input to red.
+						</aside>
+				</section>
+
+
+				<section data-background-color="#3f3f3f">
+						<pre>
+							<code  data-trim contenteditable="">
+$form->addText('age', 'Age:')
+    ->setRequired(false)
+    ->addRule(Nette\Application\UI\Form::INTEGER, 'Your age must be an integer.')
+    ->addRule(Nette\Application\UI\Form::RANGE, 'You must be older 18 years and be under 120.', [18, 120]);							</code>
+						</pre>
+					<aside class="notes">
+							Even though setting classes might be handy, we need solid data, don't we? We will add yet another validation rule, this time with addRule() method. First argument sets what should the value look like, second one is the error message again, shown if the validation is not passed. Preset validation rules will do this time, but you will learn how to create your own in no time.
+
+							Form will get another input age with condition, that it is optional, it has to be a number (Form::INTEGER) and in certain boundaries (Form::RANGE). This time we will utilize a third argument of addRule(), the range itself:
+					</aside>
+				</section>
+
+
+				<section data-background-color="#3f3f3f">
+						<pre>
+							<code  data-trim contenteditable="">
+$form->addText('age', 'Age:')
+	->setHtmlType('number')
+							</code>
+						</pre>
+						<aside class="notes">
+								Nette Framework supports HTML5, including new form elements. Thanks to that we can set the age input as numeric:
+						</aside>
+				</section>
+
+				<section data-background-color="#3f3f3f">
+						<pre>
+							<code  data-trim contenteditable="">
+$form->addPassword('password', 'Password:')
+	->setRequired('Pick a password')
+	->addRule(Nette\Application\UI\Form::MIN_LENGTH, 'Your password has to be at least %d long', 3);
+							</code>
+						</pre>
+						<aside class="notes">
+								Let's return to the password field, make it required, and verify the minimum password length (Form::MIN_LENGTH), again using the substitute characters in the message:
+						</aside>
+				</section>
+
+
+				<section data-background-color="#3f3f3f">
+					<pre>
+						<code>
+$form->addPassword('passwordVerify', 'Password again:')
+	->setRequired('Fill your password again to check for typo')
+	->addRule(Nette\Application\UI\Form::EQUAL, 'Password mismatch', $form['password']);
+						</code>
+					</pre>
+					<aside class="notes">
+							We will add one more input, passwordVerify, where user will be prompted to enter his password once more, to check for typo. Using validation rules, we will check if both fields contain the same value (Form::EQUAL). Notice the dynamic third argument, which is in fact the password control itself:
+					</aside>
+				</section>
 			</div>
 		</div>
 
@@ -156,6 +479,7 @@
 			// - https://github.com/hakimel/reveal.js#configuration
 			// - https://github.com/hakimel/reveal.js#dependencies
 			Reveal.initialize({
+				controls: false,
 				dependencies: [
 					{ src: 'plugin/markdown/marked.js' },
 					{ src: 'plugin/markdown/markdown.js' },
